@@ -1,0 +1,1746 @@
+/*
+ * Author       : bizlabs50
+ * Generated on : 13-May-2026 20:21:12
+ * Version      : 1.0
+ */
+ application "Leather Manufacturing ERP for SME"
+ {
+ 	date format = "dd-MMM-yyyy"
+ 	time zone = "Asia/Kolkata"
+ 	time format = "24-hr"
+
+ 	forms
+	{
+		form Chemical_Master
+		{
+			displayname = "Chemical Master"
+			success message = "Chemical Master Added Successfully"
+			Section
+			(
+				type = section
+	 			row = 1
+	 			column = 0   
+				width = medium
+			)
+			Chemical
+			(
+				type = picklist
+				maxchar = 100
+				values = {"Choice 1","Choice 2","Choice 3"}
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			orgid_cache
+			(
+    			type = text
+				private = true
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			Item_Id
+			(
+    			type = text
+				displayname = "Item Id"
+	 			row = 1
+	 			column = 2   
+				width = medium
+			)
+	
+			actions
+			{
+				on add
+				{
+					submit
+					(
+   						type = submit
+   						displayname = "Submit"
+					)
+				}
+				on edit
+				{
+					update
+					(
+   						type = submit
+   						displayname = "Update"
+					)
+					cancel
+					(
+   						type = cancel
+   						displayname = "Cancel"
+					)
+				}
+			}
+		}
+		form DRUM_DETAILS
+		{
+			displayname = "DRUM DETAILS"
+			success message = "Drum Detail Added Successfully"
+			Section
+			(
+				type = section
+	 			row = 1
+	 			column = 0   
+				width = medium
+			)
+			must have LOT_Number
+			(
+				type = picklist	
+				displayname = "LOT Number"
+				values  = LOT_MASTER.ID
+    			displayformat = [Display_Lot]
+				sortorder = ascending
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			must have Drum
+			(
+				type = picklist
+				maxchar = 100
+				values = {"1","2","3"}
+	 			row = 1
+	 			column = 2   
+				width = medium
+			)
+			Raw_Materials
+			(
+				type = grid
+				displayname = "Raw Materials Used"
+				Raw_Material
+				(
+					type = picklist	
+					displayname = "Raw Material"
+					values  = Raw_Material.ID
+    				displayformat = [Raw_Material_Name]
+					sortorder = ascending
+					width = medium
+				)
+				Pieces
+				(
+					type = number
+					displayname = "PCS"
+					width = medium
+				)
+				Weight
+				(
+					type = decimal
+					width = medium
+				)
+	 			row = 2
+	 			column = 1   
+				width = medium
+			)
+			Chemicals
+			(
+				type = grid
+				Chemical_Master
+				(
+					type = picklist	
+					displayname = "Chemical Master"
+					values  = Chemical_Master.ID
+    				displayformat = [Chemical]
+					sortorder = ascending
+					width = medium
+				)
+				Percentage
+				(
+    				type = percentage
+					width = medium
+				)
+				Calculated_Qty
+				(
+					type = decimal
+					displayname = "Calculated Qty(Weight x Percent)"
+					width = medium
+				)
+	 			row = 3
+	 			column = 1   
+				width = medium
+			)
+	
+			actions
+			{
+				on add
+				{
+					submit
+					(
+   						type = submit
+   						displayname = "Submit"
+					)
+				}
+				on edit
+				{
+					update
+					(
+   						type = submit
+   						displayname = "Update"
+					)
+					cancel
+					(
+   						type = cancel
+   						displayname = "Cancel"
+					)
+				}
+			}
+		}
+		form LOT_MASTER
+		{
+			displayname = "LOT MASTER"
+			success message = "Lot Added Successfully"
+			Add_Lot
+			(
+				type = section
+				displayname = "Add Lot "
+				visibility = true
+	 			row = 1
+	 			column = 0   
+				width = medium
+			)
+			plain1
+			(
+    			type = plaintext
+				value = "<div>Production Entry<br /></div>"
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			Section
+			(
+				type = section
+	 			row = 2
+	 			column = 0   
+				width = medium
+			)
+			Lot_Number
+			(
+    			type = autonumber
+				displayname = "Lot Number"
+				start index = 1
+	 			row = 2
+	 			column = 1   
+				width = medium
+			)
+			must have Date_field
+			(
+    			type = date
+				displayname = "Date"
+				alloweddays = 0,1,2,3,4,5,6
+	 			row = 2
+	 			column = 1   
+				width = medium
+			)
+			must have Status
+			(
+				type = picklist
+				maxchar = 100
+				values = {"Open","Completed"}
+				initial value = "Open"
+	 			row = 2
+	 			column = 1   
+				width = medium
+			)
+			must have Product_Name
+			(
+				type = picklist	
+				displayname = "Product"
+				values  = Product.ID
+    			displayformat = [Product_Name]
+				sortorder = ascending
+	 			row = 2
+	 			column = 2   
+				width = medium
+			)
+			Total_Output
+			(
+				type = decimal
+				displayname = "Total Output"
+	 			row = 2
+	 			column = 2   
+				width = medium
+			)
+			Display_Lot
+			(
+    			type = formula
+				displayname = "Lot Display"
+				value =  "LotNo: " + input.Lot_Number + ", " + input.Date_field
+				visibility = false
+				display type = text
+				format = plaintext
+	 			row = 2
+	 			column = 2   
+				width = medium
+			)
+			Total_Raw_Material_Used
+			(
+				type = grid
+				displayname = "Total Raw Material Used"
+				Raw_Material
+				(
+					type = picklist	
+					displayname = "Raw Material"
+					values  = Raw_Material.ID
+    				displayformat = [Raw_Material_Name]
+					sortorder = ascending
+					width = medium
+				)
+				PCS
+				(
+					type = number
+					width = medium
+				)
+				Total_Weight
+				(
+					type = decimal
+					displayname = "Total Weight"
+					width = medium
+				)
+	 			row = 3
+	 			column = 1   
+				width = medium
+			)
+			Total_Chemical_Used
+			(
+				type = grid
+				displayname = "Total Chemical Used"
+				Chemical_Summary
+				(
+					type = picklist	
+					displayname = "Chemical Summary"
+					values  = Chemical_Master.ID
+    				displayformat = [Chemical]
+					sortorder = ascending
+					width = medium
+				)
+				Total_Qty_Kg
+				(
+					type = decimal
+					displayname = "Total Qty (Kg)"
+					width = medium
+				)
+	 			row = 4
+	 			column = 1   
+				width = medium
+			)
+	
+			actions
+			{
+				on add
+				{
+					Add
+					(
+   						type = submit
+   						displayname = "Add"
+					)
+					reset
+					(
+   						type = reset
+   						displayname = "Reset"
+					)
+				}
+				on edit
+				{
+					update
+					(
+   						type = submit
+   						displayname = "Update"
+					)
+					cancel
+					(
+   						type = cancel
+   						displayname = "Cancel"
+					)
+				}
+			}
+		}
+		form Product
+		{
+			success message = "Product Added Successfully"
+			Section
+			(
+				type = section
+	 			row = 1
+	 			column = 0   
+				width = medium
+			)
+			Product_Name
+			(
+				type = picklist
+				displayname = "Product Name"
+				maxchar = 100
+				values = {"Choice 1","Choice 2","Choice 3"}
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			orgcache
+			(
+    			type = text
+				private = true
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			Product_ID
+			(
+				type = number
+				displayname = "Product ID"
+				maxchar = 19
+	 			row = 1
+	 			column = 2   
+				width = medium
+			)
+	
+			actions
+			{
+				on add
+				{
+					submit
+					(
+   						type = submit
+   						displayname = "Submit"
+					)
+				}
+				on edit
+				{
+					update
+					(
+   						type = submit
+   						displayname = "Update"
+					)
+					cancel
+					(
+   						type = cancel
+   						displayname = "Cancel"
+					)
+				}
+			}
+		}
+		form Raw_Material
+		{
+			displayname = "Raw Material"
+			success message = "Raw Material Added Successfully"
+			Section
+			(
+				type = section
+	 			row = 1
+	 			column = 0   
+				width = medium
+			)
+			Raw_Material_Name
+			(
+				type = picklist
+				displayname = "Raw Material Name"
+				maxchar = 100
+				values = {"Choice 1","Choice 2","Choice 3"}
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			orgcache
+			(
+    			type = text
+				private = true
+	 			row = 1
+	 			column = 1   
+				width = medium
+			)
+			Raw_Material_Id
+			(
+				type = number
+				displayname = "Raw Material Id"
+				maxchar = 19
+	 			row = 1
+	 			column = 2   
+				width = medium
+			)
+	
+			actions
+			{
+				on add
+				{
+					submit
+					(
+   						type = submit
+   						displayname = "Submit"
+					)
+				}
+				on edit
+				{
+					update
+					(
+   						type = submit
+   						displayname = "Update"
+					)
+					cancel
+					(
+   						type = cancel
+   						displayname = "Cancel"
+					)
+				}
+			}
+		}
+	}
+	reports
+	{
+		default list All_Lot_Masters
+		{
+			displayName = "All Lot Masters"
+			show all rows from LOT_MASTER    
+			(
+				Lot_Number as "Lot Number"
+				Total_Output as "Total Output"
+				Status
+				Total_Chemical_Used.Chemical_Summary as "Total Chemical Used"
+				Date_field as "Date"
+				Display_Lot as "Lot Display"
+				Product_Name as "Product"
+				Total_Raw_Material_Used.Raw_Material as "Total Raw Material Used"
+			)
+			conditional formatting
+			(
+				"New Formatting"
+				{
+				fields = [Lot_Number]
+				format = "color:#ffffff;background-color:#765f89;"
+				}
+			)
+			customlayouts
+			(
+				template
+	 			(
+	 	  			displayname="Custom Layout 1"
+	 	  			content="<panel  \n >\n	<pr \n			width='fill'\n		height='fill'\n>\n	<pc \n		padding = '17px'\n	bgColor = '#FFFFFF'\n\n		width = '100%'\n		hAlign = 'center'\n		vAlign = 'top'\n>\n	<pr \n			width='auto'\n		height='auto'\n>\n	<pc \n	\n>\n	\n</pc>\n</pr>\n</pc>\n</pr>\n</panel>"
+	    		)
+			)
+		}
+		default list All_Drum_Details
+		{
+			displayName = "All Drum Details"
+			show all rows from DRUM_DETAILS    
+			(
+				LOT_Number as "LOT Number"
+				Drum
+				Chemicals.Chemical_Master as "Chemicals"
+				Raw_Materials.Raw_Material as "Raw Materials Used"
+			)
+		}
+		default list All_Chemical_Masters
+		{
+			displayName = "All Chemical Masters"
+			show all rows from Chemical_Master    
+			(
+				Item_Id as "Item Id"
+				Chemical
+				orgid_cache
+			)
+		}
+		default list All_Raw_Materials
+		{
+			displayName = "All Raw Materials"
+			show all rows from Raw_Material    
+			(
+				Raw_Material_Id as "Raw Material Id"
+				Raw_Material_Name as "Raw Material Name"
+				orgcache
+			)
+		}
+		default list All_Products
+		{
+			displayName = "All Products"
+			show all rows from Product    
+			(
+				Product_Name as "Product Name"
+				orgcache
+				Product_ID as "Product ID"
+			)
+		}
+	}
+
+
+
+
+		workflow
+		{
+		form
+		{
+			Completed_Lot as "Completed Lot"
+			{
+				type =  form
+				form = LOT_MASTER
+
+				record event = on edit
+
+				on user input of Status
+				{
+					actions 
+					{
+						custom deluge script
+						(
+											input.Total_Chemical_Used.clear();
+										input.Total_Raw_Material_Used.clear();
+										if(input.Status == "Completed")
+										{
+											drums = DRUM_DETAILS[LOT_Number == input.ID];
+											//inserting chemical used in Lot Master 
+											//rowList = List();
+											chemList = List();
+											for each  d in drums
+											{
+												for each  c in d.Chemicals
+												{
+													chemList.add(c.Chemical_Master);
+												}
+											}
+											chemList = chemList.distinct();
+											for each  chem in chemList
+											{
+												total_Qty = 0;
+												for each  d in drums
+												{
+													for each  c in d.Chemicals
+													{
+														if(c.Chemical_Master == chem)
+														{
+															total_Qty = total_Qty + c.Calculated_Qty;
+															chemName = c.Chemical_Master;
+														}
+													}
+												}
+												row1 = LOT_MASTER.Total_Chemical_Used();
+												row1.Chemical_Summary=chem;
+												row1.Total_Qty_Kg=total_Qty;
+												input.Total_Chemical_Used.insert(row1);
+											}
+											//Insert raw material used in lot master
+											rawList = List();
+											for each  d in drums
+											{
+												for each  r in d.Raw_Materials
+												{
+													rawList.add(r.Raw_Material);
+												}
+											}
+											//info "raw list:" + rawList;
+											rawList = rawList.distinct();
+											for each  raw in rawList
+											{
+												total_weight = 0;
+												pieces = 0;
+												for each  d in drums
+												{
+													for each  r in d.Raw_Materials
+													{
+														if(r.Raw_Material == raw)
+														{
+															total_weight = total_weight + r.Weight;
+															rawName = r.Raw_Material;
+															pieces = pieces + r.Pieces;
+														}
+													}
+												}
+												row2 = LOT_MASTER.Total_Raw_Material_Used();
+												row2.Raw_Material=rawName;
+												row2.Total_Weight=total_weight;
+												row2.PCS=pieces;
+												input.Total_Raw_Material_Used.insert(row2);
+											}
+											// update the total output
+											//1 KG = 2.2 SQFT
+											input.Total_Output = input.Total_Raw_Material_Used.Total_Weight * 2.2;
+										}
+						)
+					}
+				}
+
+			}
+			Calculated_the_Qty as "Calculated the Qty"
+			{
+				type =  form
+				form = DRUM_DETAILS
+
+				record event = on add or edit
+
+				on user input of Chemicals.Percentage
+				{
+					actions 
+					{
+						custom deluge script
+						(
+											row.Calculated_Qty=(row.Percentage * input.Raw_Materials.Weight) / 100;
+						)
+					}
+				}
+
+			}
+			Item_Id_From_Inventory as "Item Id From Inventory"
+			{
+				type =  form
+				form = Chemical_Master
+
+				record event = on add or edit
+
+				on user input of Chemical
+				{
+					actions 
+					{
+						custom deluge script
+						(
+											listOfItems = invokeurl
+										[
+											url :"https://www.zohoapis.in/inventory/v1/items?organization_id=" + input.orgid_cache
+											type :GET
+											connection:"zoho_inventory_connection"
+										];
+										items = listOfItems.get("items");
+										for each  item in items
+										{
+											if(input.Chemical == item.get("item_name"))
+											{
+												input.Item_Id = item.get("item_id");
+												break;
+											}
+										}
+						)
+					}
+				}
+
+			}
+			Updating_Inventory as "Updating Inventory"
+			{
+				type =  form
+				form = LOT_MASTER
+
+				record event = on edit
+
+				on success
+				{
+					actions 
+					{
+						custom deluge script
+						(
+											organisation_response = invokeurl
+										[
+											url :"https://www.zohoapis.in/inventory/v1/organizations"
+											type :GET
+											connection:"zoho_inventory_connection"
+										];
+										orgId = organisation_response.get("organizations").get(0).get("organization_id");
+										if(input.Status == "Completed" && input.Total_Output != null)
+										{
+											line_item = List();
+											productId = input.Product_Name.Product_ID;
+											productName = input.Product_Name;
+											itemQuantity = input.Total_Output;
+											itemMap = Map();
+											itemMap.put("item_id",productId);
+											itemMap.put("name",productName);
+											itemMap.put("quantity_adjusted",itemQuantity);
+											line_item.add(itemMap);
+											for each  chem in input.Total_Chemical_Used
+											{
+												chemMap = Map();
+												chemMap.put("item_id",chem.Chemical_Summary.Item_Id);
+												chemMap.put("name",chem.Chemical_Summary.Chemical);
+												deduction_value = 0 - chem.Total_Qty_Kg;
+												chemMap.put("quantity_adjusted",deduction_value);
+												line_item.add(chemMap);
+											}
+											for each  raw in input.Total_Raw_Material_Used
+											{
+												rawMap = Map();
+												rawMap.put("item_id",raw.Raw_Material.Raw_Material_Id);
+												rawMap.put("name",raw.Raw_Material);
+												deduction_value_raw = 0 - raw.Total_Weight;
+												rawMap.put("quantity_adjusted",deduction_value_raw);
+												line_item.add(rawMap);
+											}
+											paraMap = Map();
+											paraMap.put("date",zoho.currentdate.toString("yyyy-MM-dd"));
+											paraMap.put("reason","new lot");
+											paraMap.put("adjustment_type","quantity");
+											paraMap.put("line_items",line_item);
+											response = invokeurl
+											[
+												url :"https://www.zohoapis.in/inventory/v1/inventoryadjustments?organization_id=" + orgId
+												type :POST
+												parameters:paraMap.toString()
+												headers:{"Content-Type":"application/json"}
+												connection:"zoho_inventory_connection"
+											];
+										}
+						)
+					}
+				}
+
+			}
+			Chemical_Name_from_Invent as "Chemical Name from Inventory"
+			{
+				type =  form
+				form = Chemical_Master
+
+				record event = on add or edit
+
+				on load
+				{
+					actions 
+					{
+						custom deluge script
+						(
+											organisation_response = invokeurl
+										[
+											url :"https://www.zohoapis.in/inventory/v1/organizations"
+											type :GET
+											connection:"zoho_inventory_connection"
+										];
+										orgId = organisation_response.get("organizations").get(0).get("organization_id");
+										input.orgid_cache = orgId;
+										listOfItems = invokeurl
+										[
+											url :"https://www.zohoapis.in/inventory/v1/items?organization_id=" + orgId
+											type :GET
+											connection:"zoho_inventory_connection"
+										];
+										itemList = listOfItems.get("items");
+										clear Chemical;
+										for each  item in itemList
+										{
+											categoryName = item.get("cf_category");
+											if(categoryName == "CHEMICAL")
+											{
+												input.Chemical:ui.add(item.get("item_name"));
+											}
+										}
+						)
+					}
+				}
+
+			}
+			disable as "disable"
+			{
+				type =  form
+				form = LOT_MASTER
+
+				record event = on add or edit
+
+				field rules
+				{
+					actions 
+					{
+						disable Total_Output;
+					}
+				}
+
+			}
+			disable_subforms_entry as "disable subforms entry"
+			{
+				type =  form
+				form = LOT_MASTER
+
+				record event = on add or edit
+
+				field rules
+				{
+					actions  (Status == "Open")
+					{
+					hide add row of Total_Chemical_Used,Total_Raw_Material_Used;
+					}
+				}
+
+			}
+			Raw_Material_List as "Raw Material List"
+			{
+				type =  form
+				form = Raw_Material
+
+				record event = on add or edit
+
+				on load
+				{
+					actions 
+					{
+						custom deluge script
+						(
+											organization_response = invokeurl
+										[
+											url :"https://www.zohoapis.in/inventory/v1/organizations"
+											type :GET
+											connection:"zoho_inventory_connection"
+										];
+										orgId = organization_response.get("organizations").get(0).get("organization_id");
+										input.orgcache = orgId;
+										rawMaterialList = invokeurl
+										[
+											url :"https://www.zohoapis.in/inventory/v1/items?organization_id=" + orgId
+											type :GET
+											connection:"zoho_inventory_connection"
+										];
+										info rawMaterialList;
+										rawList = rawMaterialList.get("items");
+										clear Raw_Material_Name;
+										for each  r in rawList
+										{
+											categoryName = r.get("cf_category");
+											if(categoryName == "LEATHER")
+											{
+												input.Raw_Material_Name:ui.add(r.get("item_name"));
+											}
+										}
+						)
+					}
+				}
+
+			}
+			Raw_Material_Item_Id as "Raw Material Item Id"
+			{
+				type =  form
+				form = Raw_Material
+
+				record event = on add or edit
+
+				on user input of Raw_Material_Name
+				{
+					actions 
+					{
+						custom deluge script
+						(
+											rawMaterialList = invokeurl
+										[
+											url :"https://www.zohoapis.in/inventory/v1/items?organization_id=" + input.orgcache
+											type :GET
+											connection:"zoho_inventory_connection"
+										];
+										listOfMaterial = rawMaterialList.get("items");
+										for each  item in listOfMaterial
+										{
+											if(input.Raw_Material_Name == item.get("item_name"))
+											{
+												input.Raw_Material_Id = item.get("item_id");
+												break;
+											}
+										}
+						)
+					}
+				}
+
+			}
+			Products as "Products"
+			{
+				type =  form
+				form = Product
+
+				record event = on add or edit
+
+				on load
+				{
+					actions 
+					{
+						custom deluge script
+						(
+											organization_response = invokeurl
+										[
+											url :"https://www.zohoapis.in/inventory/v1/organizations"
+											type :GET
+											connection:"zoho_inventory_connection"
+										];
+										orgId = organization_response.get("organizations").get(0).get("organization_id");
+										input.orgcache = orgId;
+										productList = invokeurl
+										[
+											url :"https://www.zohoapis.in/inventory/v1/items?organization_id=" + orgId
+											type :GET
+											connection:"zoho_inventory_connection"
+										];
+										prodList = productList.get("items");
+										clear Product_Name;
+										for each  prod in prodList
+										{
+											categoryName = prod.get("cf_category");
+											if(categoryName == "END PRODUCT")
+											{
+												input.Product_Name:ui.add(prod.get("item_name"));
+											}
+										}
+						)
+					}
+				}
+
+			}
+			Send_Email_Form_Propertie as "Send Email - Form Properties"
+			{
+				type =  presuccess
+				form = LOT_MASTER
+					status = inactive
+				on start
+				{
+					actions 
+					{
+						sendmail
+						(
+							from : "zoho.adminuserid"
+							to : "zoho.adminuserid"
+							subject : "Leather Manufacturing ERP for SME : New entry added"
+							message : "Hello,<br/><br/>A new entry added in 'LOT MASTER' form of 'Leather Manufacturing ERP for SME' application.<br/><br><br><br><br>"
+							attachments : template : _default as inline
+						)
+					}
+				}
+			}
+			Product_ID as "Product ID"
+			{
+				type =  form
+				form = Product
+
+				record event = on add or edit
+
+				on user input of Product_Name
+				{
+					actions 
+					{
+						custom deluge script
+						(
+											productList = invokeurl
+										[
+											url :"https://www.zohoapis.in/inventory/v1/items?organization_id=" + input.orgcache
+											type :GET
+											connection:"zoho_inventory_connection"
+										];
+										listOfProduct = productList.get("items");
+										for each  prod in listOfProduct
+										{
+											if(input.Product_Name == prod.get("item_name"))
+											{
+												input.Product_ID = prod.get("item_id");
+												break;
+											}
+										}
+						)
+					}
+				}
+
+			}
+		}
+
+
+
+
+
+
+		functions
+		{
+			Complted_Lot as "Complted Lot"
+			{
+				type =  functions
+				form = LOT_MASTER
+				execution type = for each record	
+				on start
+				{
+				}
+			}
+		}
+	}
+	share_settings
+	{
+			"Read"
+			{
+				name = "Read"
+				type = Users_Permissions
+				permissions = {Chat:true, Predefined:true, ApiAccess:true, PIIAccess:true, ePHIAccess:true}
+				description = "This profile will have read permission for all components\n"
+			}
+			"Write"
+			{
+				name = "Write"
+				type = Users_Permissions
+				permissions = {Chat:true, Predefined:true, ApiAccess:true, PIIAccess:true, ePHIAccess:true}
+				description = "This profile will have write permission for all components\n"
+			}
+			"Developer"
+			{
+				name = "Developer"
+				type = Developer
+				permissions = {Chat:false, Predefined:true, ApiAccess:true, PIIAccess:true, ePHIAccess:true}
+				description = "Developer Profile\n"
+			}
+			"Administrator"
+			{
+				name = "Administrator"
+				type = Users_Permissions
+				permissions = {Chat:true, Predefined:true, ApiAccess:true, PIIAccess:true, ePHIAccess:true}
+				description = "This profile will have all the permissions.\n"
+			}
+			"Customer"
+			{
+				name = "Customer"
+				type = Customer_Portal
+				permissions = {Chat:true, Predefined:true, ApiAccess:true, PIIAccess:true, ePHIAccess:true}
+				description = "This is the default profile having only add and view permission.\n"
+			}
+			roles
+			{
+				"CEO"
+				{
+					description = "User belonging to this role can access data of all other users."
+				}
+			}
+	}
+
+
+	connections
+	{
+		zoho_inventory_connection
+		(
+			displayname = "Zoho Inventory Connection"
+			connector = zohoinventory
+			permissions = {"all_operations","creaet_user","create_bill","create_composite_item","create_contact_person","create_credit_note","create_custom_module_record","create_customer","create_customer_payment","create_invoice","create_item","create_item_adjustment","create_item_group","create_package","create_price_list","create_purchase_order","create_purchase_receive","create_retainer_invoice","create_sales_order","create_sales_return","create_shipment_order","create_transfer_order","create_vendor_credit","delete_bill","delete_composite_item","delete_contact_person","delete_credit_note","delete_customer_payment","delete_customers","delete_invoice","delete_item","delete_item_adjustment","delete_item_group","delete_package","delete_price_list","delete_purchase_order","delete_purchase_receive","delete_retainer_invoice","delete_sales_order","delete_sales_return","delete_shipment_order","delete_transfer_order","delete_user","delete_vendor_credit","get_all_bills","get_all_chart_of_accounts","get_all_composite_items","get_all_contact_persons","get_all_credit_note","get_all_currencies","get_all_custom_module_records","get_all_custom_modules","get_all_customer_payments","get_all_customer_tax_exemptions","get_all_customers","get_all_invoices","get_all_item_adjustments","get_all_item_groups","get_all_item_tax_exemptions","get_all_items","get_all_organizations","get_all_packages","get_all_price_lists","get_all_purchase_accounts","get_all_purchase_orders","get_all_purchase_receives","get_all_retainer_invoices","get_all_sales_accounts","get_all_sales_orders","get_all_sales_returns","get_all_shipment_orders","get_all_states","get_all_stock_accounts","get_all_tax_authorities","get_all_taxes","get_all_transfer_orders","get_all_users","get_all_vendor_credits","get_all_vendors","get_bill","get_composite_item","get_contact_person","get_credit_note","get_custom_module_record","get_customer","get_customer_payment","get_invoice","get_item","get_item_adjustment","get_item_group","get_package","get_price_list","get_purchase_order","get_purchase_receive","get_retainer_invoice","get_sales_order","get_sales_return","get_shipment_order","get_transfer_order","get_user","get_vendor_credit","invite_user","mark_bill_as_open","mark_bill_as_void","mark_composite_item_as_active","mark_composite_item_as_inactive","mark_customer_as_active","mark_customer_as_inactive","mark_invoice_as_draft","mark_invoice_as_sent","mark_invoice_as_void","mark_item_as_active","mark_item_as_inactive","mark_item_group_as_active","mark_item_group_as_inactive","mark_price_list_as_active","mark_price_list_as_inactive","mark_purchase_order_as_cancelled","mark_purchase_order_as_issued","mark_retainer_invoice_as_draft","mark_retainer_invoice_as_sent","mark_retainer_invoice_as_void","mark_sales_order_as_confirmed","mark_sales_order_as_void","mark_shipment_as_delivered","mark_transfer_order_as_received","mark_user_as_active","mark_user_as_inactive","mark_vendor_credit_as_open","mark_vendor_credit_as_void","search_bills","search_credit_notes","search_customer_payments","search_customers","search_invoices","search_items","search_packages","search_purchase_orders","search_purchase_receives","search_retainer_invoices","search_sales_orders","search_sales_return","search_shipment_orders","search_transfer_orders","search_vendor_credits","sync_invoices","sync_items","sync_sales_orders","update_bill","update_composite_item","update_contact_person","update_credit_note","update_custom_module_record","update_customer","update_customer_payment","update_invoice","update_item","update_item_adjustment","update_item_group","update_package","update_price_list","update_purchase_order","update_purchase_receive","update_retainer_invoice","update_sales_order","update_sales_return","update_shipment_order","update_transfer_order","update_user","update_vendor_credit"}
+		)
+	}
+	web
+	{
+		forms
+		{
+			form Chemical_Master
+			{
+				label placement = left
+			}
+			form DRUM_DETAILS
+			{
+				label placement = labelinplace
+			}
+			form LOT_MASTER
+			{
+				label placement = labelinplace
+			}
+			form Product
+			{
+				label placement = left
+			}
+			form Raw_Material
+			{
+				label placement = left
+			}
+		}
+		reports
+		{
+			report All_Lot_Masters
+			{
+				quickview
+				(
+					layout
+					(
+		 				type = -1
+						datablock1
+						(
+							layout type = -1
+							fields
+							(
+								Lot_Number as "Lot Number"
+								Total_Output as "Total Output"
+								Status
+								Total_Chemical_Used.Chemical_Summary as "Total Chemical Used"
+								Total_Raw_Material_Used.Raw_Material as "Total Raw Material Used"
+							)
+						)
+					)
+					menu
+    				(
+    	 				header
+    	 				(
+    		 				Edit 
+    		 				Duplicate 
+    		 				Delete 
+    	 				)
+						record
+						(
+							Edit   	   
+							Duplicate   	   
+    					)
+    				)
+    				action
+    				(
+						on click
+						(
+							Edit   	   
+    					)
+						on right click
+						(
+							Edit   	   
+							Delete   	   
+							Duplicate   	   
+							View Record   	   
+    					)
+     				)
+				)
+
+				detailview
+				(
+					layout
+					(
+		 				type = 1
+						datablock1
+						(
+							layout type = -2
+							fields
+							(
+								Lot_Number as "Lot Number"
+								Total_Output as "Total Output"
+								Status
+								Total_Chemical_Used.Chemical_Summary as "Total Chemical Used"
+								Date_field as "Date"
+								Display_Lot as "Lot Display"
+								Product_Name as "Product"
+								Total_Raw_Material_Used.Raw_Material as "Total Raw Material Used"
+							)
+						)
+					)
+					menu
+    				(
+    	 				header
+    	 				(
+    		 				Edit 
+    		 				Duplicate 
+    		 				Delete 
+    	 				)
+    				)
+				)
+			}
+			report All_Drum_Details
+			{
+				quickview
+				(
+					layout
+					(
+		 				type = -1
+						datablock1
+						(
+							layout type = -1
+							fields
+							(
+								LOT_Number as "LOT Number"
+								Drum
+								Chemicals.Chemical_Master as "Chemicals"
+								Raw_Materials.Raw_Material as "Raw Materials Used"
+							)
+						)
+					)
+					menu
+    				(
+    	 				header
+    	 				(
+    		 				Edit 
+    		 				Duplicate 
+    		 				Delete 
+    	 				)
+						record
+						(
+							Edit   	   
+							Duplicate   	   
+							Delete   	   
+    					)
+    				)
+    				action
+    				(
+						on click
+						(
+							Edit   	   
+    					)
+						on right click
+						(
+							Edit   	   
+							Delete   	   
+							Duplicate   	   
+							View Record   	   
+    					)
+     				)
+				)
+
+				detailview
+				(
+					layout
+					(
+		 				type = 1
+						datablock1
+						(
+							layout type = -2
+							fields
+							(
+								LOT_Number as "LOT Number"
+								Drum
+								Chemicals.Chemical_Master as "Chemicals"
+								Raw_Materials.Raw_Material as "Raw Materials Used"
+							)
+						)
+					)
+					menu
+    				(
+    	 				header
+    	 				(
+    		 				Edit 
+    		 				Duplicate 
+    		 				Delete 
+    	 				)
+    				)
+				)
+			}
+			report All_Chemical_Masters
+			{
+				quickview
+				(
+					layout
+					(
+		 				type = -1
+						datablock1
+						(
+							layout type = -1
+							fields
+							(
+								Item_Id as "Item Id"
+								Chemical
+								orgid_cache
+							)
+						)
+					)
+					menu
+    				(
+    	 				header
+    	 				(
+    		 				Edit 
+    		 				Duplicate 
+    		 				Delete 
+    	 				)
+						record
+						(
+							Edit   	   
+							Duplicate   	   
+							Delete   	   
+    					)
+    				)
+    				action
+    				(
+						on click
+						(
+							View Record   	   
+    					)
+						on right click
+						(
+							Edit   	   
+							Delete   	   
+							Duplicate   	   
+							View Record   	   
+    					)
+     				)
+				)
+
+				detailview
+				(
+					layout
+					(
+		 				type = 1
+						datablock1
+						(
+							layout type = -2
+							fields
+							(
+								Item_Id as "Item Id"
+								Chemical
+								orgid_cache
+							)
+						)
+					)
+					menu
+    				(
+    	 				header
+    	 				(
+    		 				Edit 
+    		 				Duplicate 
+    		 				Delete 
+    	 				)
+    				)
+				)
+			}
+			report All_Raw_Materials
+			{
+				quickview
+				(
+					layout
+					(
+		 				type = -1
+						datablock1
+						(
+							layout type = -1
+							fields
+							(
+								Raw_Material_Id as "Raw Material Id"
+								Raw_Material_Name as "Raw Material Name"
+								orgcache
+							)
+						)
+					)
+					menu
+    				(
+    	 				header
+    	 				(
+    		 				Edit 
+    		 				Duplicate 
+    		 				Delete 
+    	 				)
+						record
+						(
+							Edit   	   
+							Duplicate   	   
+							Delete   	   
+    					)
+    				)
+    				action
+    				(
+						on click
+						(
+							View Record   	   
+    					)
+						on right click
+						(
+							Edit   	   
+							Delete   	   
+							Duplicate   	   
+							View Record   	   
+    					)
+     				)
+				)
+
+				detailview
+				(
+					layout
+					(
+		 				type = 1
+						datablock1
+						(
+							layout type = -2
+							fields
+							(
+								Raw_Material_Id as "Raw Material Id"
+								Raw_Material_Name as "Raw Material Name"
+								orgcache
+							)
+						)
+					)
+					menu
+    				(
+    	 				header
+    	 				(
+    		 				Edit 
+    		 				Duplicate 
+    		 				Delete 
+    	 				)
+    				)
+				)
+			}
+			report All_Products
+			{
+				quickview
+				(
+					layout
+					(
+		 				type = -1
+						datablock1
+						(
+							layout type = -1
+							fields
+							(
+								Product_Name as "Product Name"
+								orgcache
+								Product_ID as "Product ID"
+							)
+						)
+					)
+					menu
+    				(
+    	 				header
+    	 				(
+    		 				Edit 
+    		 				Duplicate 
+    		 				Delete 
+    	 				)
+						record
+						(
+							Edit   	   
+							Duplicate   	   
+							Delete   	   
+    					)
+    				)
+    				action
+    				(
+						on click
+						(
+							View Record   	   
+    					)
+						on right click
+						(
+							Edit   	   
+							Delete   	   
+							Duplicate   	   
+							View Record   	   
+    					)
+     				)
+				)
+
+				detailview
+				(
+					layout
+					(
+		 				type = 1
+						datablock1
+						(
+							layout type = -2
+							fields
+							(
+								Product_Name as "Product Name"
+								orgcache
+								Product_ID as "Product ID"
+							)
+						)
+					)
+					menu
+    				(
+    	 				header
+    	 				(
+    		 				Edit 
+    		 				Duplicate 
+    		 				Delete 
+    	 				)
+    				)
+				)
+			}
+		}
+		menu
+		{
+			space Space
+			{
+				displayname = "Space"
+				icon = "objects-spaceship"
+
+				section Lot_Masters
+				{
+					displayname = "Lot Masters"
+					icon = "sport-golf"
+					form  LOT_MASTER
+					{
+						icon = "sport-crown"
+					}
+					report All_Lot_Masters
+					{
+						icon = "tech-desktop"
+					}
+				}
+				section SharedAnalytics_Section
+				{
+					type = shared_user_report_section
+					displayname = "Reports"
+					icon = "business-chart-bar-33"
+				}
+				section Drum_Details
+				{
+					displayname = "Drum Details"
+					icon = "tech-2-keyboard-hide"
+					form  DRUM_DETAILS
+					{
+						icon = "tech-2-keyboard-hide"
+					}
+				}
+				section Chemical_Masters
+				{
+					displayname = "Chemical Masters"
+					icon = "health-molecule-40"
+					form  Chemical_Master
+					{
+						icon = "health-molecule-40"
+					}
+				}
+				section Raw_Materials
+				{
+					displayname = "Raw Materials"
+					icon = "tech-2-pci-card"
+					form  Raw_Material
+					{
+						icon = "design-window-paragraph"
+					}
+				}
+				section Products
+				{
+					displayname = "Products"
+					icon = "shopping-gift"
+					form  Product
+					{
+						icon = "tech-2-pci-card"
+					}
+				}
+			}
+			space Space_2
+			{
+				displayname = "Space 2"
+				icon = "objects-spaceship"
+
+					report All_Chemical_Masters
+					{
+						icon = "tech-desktop"
+					}
+					report All_Raw_Materials
+					{
+						icon = "tech-desktop"
+					}
+					report All_Products
+					{
+						icon = "tech-desktop"
+					}
+					report All_Drum_Details
+					{
+						icon = "tech-desktop"
+					}
+				section App_Preferences
+				{
+					displayname = "App Preferences"
+					icon = "design-app"
+					systemcomponent
+					{
+						type = localization
+						displayname = "Language Selection"
+						icon = "education-language"
+					}
+					systemcomponent
+					{
+						type = connection
+						displayname = "Integrations"
+						icon = "tech-2-connection"
+					}
+				}
+				section Approvals
+				{
+					displayname = "Approvals"
+					icon = "ui-2-hourglass"
+					systemcomponent
+					{
+						type = approval
+						approval status = pending
+						displayname = "Pending Tasks"
+						icon = "ui-2-hourglass"
+					}
+					systemcomponent
+					{
+						type = approval
+						approval status = completed
+						displayname = "Completed Tasks"
+						icon = "design-todo"
+					}
+				}
+			}
+			preference
+			{
+				icon
+				{
+					style = outline
+				}
+			}
+		}
+		customize
+		{
+			layout
+			{
+				theme = "theme_7"
+			}
+			font = "raleway"
+			color options
+			{
+				color = "3"
+			}
+			logo
+			{
+				preference = "app_icon"
+				placement = "left"
+			}
+		}
+	}
+	phone
+	{
+		forms
+		{
+			form Chemical_Master
+			{
+				label placement = auto
+			}
+			form DRUM_DETAILS
+			{
+				label placement = auto
+			}
+			form LOT_MASTER
+			{
+				label placement = auto
+			}
+			form Product
+			{
+				label placement = auto
+			}
+			form Raw_Material
+			{
+				label placement = auto
+			}
+		}
+		customize
+		{
+			layout = slidingpane
+			font = "default"
+			style = "3"
+			color options
+			{
+				color = amethyst
+			}
+			logo
+			{
+				preference = "none"
+			}
+		}
+	}
+	tablet
+	{
+		forms
+		{
+			form Chemical_Master
+			{
+				label placement = auto
+			}
+			form DRUM_DETAILS
+			{
+				label placement = auto
+			}
+			form LOT_MASTER
+			{
+				label placement = auto
+			}
+			form Product
+			{
+				label placement = auto
+			}
+			form Raw_Material
+			{
+				label placement = auto
+			}
+		}
+		customize
+		{
+			layout = slidingpane
+			font = "default"
+			style = "3"
+			color options
+			{
+				color = amethyst
+			}
+			logo
+			{
+				preference = "none"
+			}
+		}
+	}
+	translation
+{
+{"Language_Settings":{"LANGAGUE_WITH_LOGIN":"browser"}}
+}
+}
